@@ -1,9 +1,9 @@
 # Open Fuel Calculator
 
 <div style="display: flex; gap: 10px;">
-  <img src="docs/img/screenshot_home.png" width="300" height="auto">
-  <img src="docs/img/screenshot_add_vehicle.png" width="300" height="auto">
-  <img src="docs/img/screenshot_settings.png" width="300" height="auto">
+  <img src="docs/img/screenshot_home.png" width="200" height="auto">
+  <img src="docs/img/screenshot_add_vehicle.png" width="200" height="auto">
+  <img src="docs/img/screenshot_settings.png" width="200" height="auto">
 </div>
 
 ## About
