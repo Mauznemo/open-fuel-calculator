@@ -64,7 +64,7 @@ class _AddVehicleBottomSheetState extends State<AddVehicleBottomSheet> {
             child: TextField(
               keyboardType: TextInputType.number,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
               ],
               controller: _consumptionController,
               decoration: const InputDecoration(
@@ -77,7 +77,8 @@ class _AddVehicleBottomSheetState extends State<AddVehicleBottomSheet> {
               onPressed: () {
                 ObjectBox.instance.addVehicle(Vehicle(
                     name: _vehicleController.text,
-                    consumption: double.parse(_consumptionController.text)));
+                    consumption: double.parse(
+                        _consumptionController.text.replaceAll(',', '.'))));
                 _vehicleController.clear();
                 _consumptionController.clear();
                 Navigator.pop(context);
