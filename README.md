@@ -1,5 +1,9 @@
 # Open Fuel Calculator
 
+<img src="docs/img/screenshot_home.png" width="300" height="auto">
+<img src="docs/img/screenshot_add_vehicle.png" width="300" height="auto">
+<img src="docs/img/screenshot_settings.png" width="300" height="auto">
+
 ## About
 An app to calculate how much the fuel for a trip will cost.
 
