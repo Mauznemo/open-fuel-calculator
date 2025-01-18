@@ -129,7 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: Theme.of(context).textTheme.titleLarge),
             ),
             Divider(height: 1, color: Colors.grey),
-            VehicleList(),
+            VehicleList(consumptionUnit: consumptionUnits),
           ],
         ));
   }

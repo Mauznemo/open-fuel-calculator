@@ -215,7 +215,10 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Your FAB action
-            AddVehicleBottomSheet.showBottomSheet(context);
+            AddVehicleBottomSheet.showBottomSheet(context, consumptionUnit)
+                .then((value) {
+              _getVehicles();
+            });
           },
           child: const Icon(Icons.add),
         ));

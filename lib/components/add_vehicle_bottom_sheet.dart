@@ -5,14 +5,17 @@ import '../helpers/object_box.dart';
 import '../models/vehicle.dart';
 
 class AddVehicleBottomSheet extends StatefulWidget {
-  const AddVehicleBottomSheet({super.key});
+  const AddVehicleBottomSheet({super.key, required this.consumptionUnit});
 
-  static Future<void> showBottomSheet(BuildContext context) async {
+  final String consumptionUnit;
+
+  static Future<void> showBottomSheet(
+      BuildContext context, String consumptionUnit) async {
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return AddVehicleBottomSheet();
+          return AddVehicleBottomSheet(consumptionUnit: consumptionUnit);
         });
   }
 
@@ -67,14 +70,18 @@ class _AddVehicleBottomSheetState extends State<AddVehicleBottomSheet> {
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
               ],
               controller: _consumptionController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 border: UnderlineInputBorder(),
-                labelText: 'Consumption (l/100km)',
+                labelText: 'Consumption (${widget.consumptionUnit})',
               ),
             ),
           ),
           FilledButton.icon(
               onPressed: () {
+                if (_vehicleController.text.isEmpty ||
+                    _consumptionController.text.isEmpty) {
+                  return;
+                }
                 ObjectBox.instance.addVehicle(Vehicle(
                     name: _vehicleController.text,
                     consumption: double.parse(

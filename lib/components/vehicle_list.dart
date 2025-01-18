@@ -5,7 +5,9 @@ import '../models/vehicle.dart';
 import 'add_vehicle_bottom_sheet.dart';
 
 class VehicleList extends StatefulWidget {
-  const VehicleList({super.key});
+  const VehicleList({super.key, required this.consumptionUnit});
+
+  final String consumptionUnit;
 
   @override
   State<VehicleList> createState() => _VehicleListState();
@@ -63,7 +65,7 @@ class _VehicleListState extends State<VehicleList> {
                         Text("${vehicleData.name} (${vehicleData.id})",
                             style: const TextStyle(fontSize: 20)),
                         Text(
-                            "Consumption: ${vehicleData.consumption.toStringAsFixed(2)} L/100km",
+                            "Consumption: ${vehicleData.consumption.toStringAsFixed(2)} ${widget.consumptionUnit}",
                             style: const TextStyle(fontSize: 10)),
                       ],
                     ),
@@ -83,7 +85,8 @@ class _VehicleListState extends State<VehicleList> {
           ),
           FilledButton.icon(
               onPressed: () async {
-                await AddVehicleBottomSheet.showBottomSheet(context);
+                await AddVehicleBottomSheet.showBottomSheet(
+                    context, widget.consumptionUnit);
                 _vehicles = ObjectBox.instance.getVehicles();
                 setState(() {});
               },
