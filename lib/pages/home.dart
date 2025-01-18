@@ -16,21 +16,32 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _distanceController = TextEditingController();
   final _vehicleController = TextEditingController();
-  FocusNode _dropdownFocusNode = FocusNode();
+  final FocusNode _dropdownFocusNode = FocusNode();
   final _priceController = TextEditingController();
 
-  List<Vehicle> _vehicles = ObjectBox.instance.getVehicles()
-    ..sort((a, b) {
-      if (a.isFavorite) return -1;
-      if (b.isFavorite) return 1;
-      return 0;
-    });
+  late List<Vehicle> _vehicles = [];
 
   Vehicle? _selectedVehicle;
 
   late String distanceUnit = "";
   late String consumptionUnit = "";
   late String volumeUnit = "";
+
+  void _getVehicles() {
+    bool wasEmpty = _vehicles.isEmpty;
+    _vehicles = ObjectBox.instance.getVehicles()
+      ..sort((a, b) {
+        if (a.isFavorite) return -1;
+        if (b.isFavorite) return 1;
+        return 0;
+      });
+
+    if (wasEmpty && _vehicles.isNotEmpty) {
+      _selectedVehicle = _vehicles.first;
+    }
+
+    setState(() {});
+  }
 
   void _getData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,20 +62,25 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    _vehicleController.text =
-        "${_selectedVehicle?.name} (${_selectedVehicle?.consumption.toStringAsFixed(2)} $consumptionUnit)"; //Have to manually set the text or else it won't show consumptionUnit
+    if (_vehicles.isNotEmpty) {
+      _vehicleController.text =
+          "${_selectedVehicle?.name} (${_selectedVehicle?.consumption.toStringAsFixed(2)} $consumptionUnit)"; //Have to manually set the text or else it won't show consumptionUnit
+    } else {
+      _vehicleController.text = "No vehicles found";
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    _getVehicles();
     _dropdownFocusNode.addListener(() {
       if (_dropdownFocusNode.hasFocus) {
         _vehicleController.clear(); // Clear the controller when focused
       }
     });
 
-    _selectedVehicle = _vehicles.first;
+    _selectedVehicle = _vehicles.isEmpty ? null : _vehicles.first;
     _getData();
   }
 
@@ -80,7 +96,8 @@ class _HomePageState extends State<HomePage> {
   String _getCost() {
     if (_vehicleController.text.isEmpty ||
         _distanceController.text.isEmpty ||
-        _priceController.text.isEmpty) {
+        _priceController.text.isEmpty ||
+        _vehicles.isEmpty) {
       return "";
     }
 
@@ -137,6 +154,8 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.settings),
               onPressed: () {
                 Navigator.pushNamed(context, '/settings').then((value) {
+                  _vehicles = ObjectBox.instance.getVehicles();
+                  _getVehicles();
                   _getData();
                 });
               },
@@ -148,7 +167,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: DropdownMenu<Vehicle>(
-                initialSelection: _vehicles.first,
+                initialSelection: _vehicles.isEmpty ? null : _vehicles.first,
                 width: MediaQuery.of(context).size.width,
                 hintText: "Select Vehicle",
                 requestFocusOnTap: true,
