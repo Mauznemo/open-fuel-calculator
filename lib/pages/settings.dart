@@ -15,7 +15,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   final List<String> consumptionUnitsOptions = [
     "L/100km",
-    "L/km",
+    "km/L",
     "mpg (US)",
     "mpg (UK)"
   ];

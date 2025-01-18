@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       consumptionUnit = prefs.getString('consumptionUnit') ?? 'L/100km';
       switch (consumptionUnit) {
         case "L/100km":
-        case "L/km":
+        case "km/L":
           volumeUnit = "liter";
           break;
         case "mpg (US)":
@@ -80,9 +80,51 @@ class _HomePageState extends State<HomePage> {
   String _getCost() {
     if (_vehicleController.text.isEmpty ||
         _distanceController.text.isEmpty ||
-        _priceController.text.isEmpty) return "Please fill all fields";
+        _priceController.text.isEmpty) {
+      return "";
+    }
 
-    return "${(_selectedVehicle!.consumption * double.parse(_distanceController.text.replaceAll(',', '.')) * double.parse(_priceController.text.replaceAll(',', '.'))).toStringAsFixed(2)}€";
+    double consumption = _selectedVehicle?.consumption ?? 0;
+    double distance =
+        double.parse(_distanceController.text.replaceAll(',', '.'));
+    double price = double.parse(_priceController.text.replaceAll(',', '.'));
+
+    double distanceInKm =
+        distanceUnit == "miles" ? distance * 1.60934 : distance;
+
+    double consumptionAsLPer100km = _getConsumptionAsLPer100km(consumption);
+
+    double pricePerL = _getPriceAsPerL(price);
+
+    return "${((distanceInKm * consumptionAsLPer100km / 100) * pricePerL).toStringAsFixed(2)}€";
+  }
+
+  double _getPriceAsPerL(price) {
+    switch (volumeUnit) {
+      case "liter":
+        return price;
+      case "us gallon":
+        return price / 3.78541;
+      case "uk gallon":
+        return price / 4.54609;
+      default:
+        return 0;
+    }
+  }
+
+  double _getConsumptionAsLPer100km(consumption) {
+    switch (consumptionUnit) {
+      case "L/100km":
+        return consumption;
+      case "km/L":
+        return 100 / consumption;
+      case "mpg (US)":
+        return 235.214 / consumption;
+      case "mpg (UK)":
+        return 282.481 / consumption;
+      default:
+        return 0;
+    }
   }
 
   @override
@@ -156,10 +198,18 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(_getCost(),
-                    style: Theme.of(context).textTheme.titleLarge))
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    _getCost(),
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
