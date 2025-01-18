@@ -1,16 +1,9 @@
-# fuel_calculator_flutter
+# Open Fuel Calculator
 
-A new Flutter project.
+## About
+An app to calculate how much the fuel for a trip will cost.
 
-## Getting Started
+I'm making this app because all the ones on the Play Store don't have the features I want (like saving your vehicles and their consumption).
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Made with
+The app is made with Flutter ([documentation](https://docs.flutter.dev/)).
