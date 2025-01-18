@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fuel_calculator_flutter/models/vehicle.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/add_vehicle_bottom_sheet.dart';
 import '../helpers/object_box.dart';
@@ -27,6 +28,33 @@ class _HomePageState extends State<HomePage> {
 
   Vehicle? _selectedVehicle;
 
+  late String distanceUnit = "";
+  late String consumptionUnit = "";
+  late String volumeUnit = "";
+
+  void _getData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      distanceUnit = prefs.getString('distanceUnit') ?? 'km';
+      consumptionUnit = prefs.getString('consumptionUnit') ?? 'L/100km';
+      switch (consumptionUnit) {
+        case "L/100km":
+        case "L/km":
+          volumeUnit = "liter";
+          break;
+        case "mpg (US)":
+          volumeUnit = "us gallon";
+          break;
+        case "mpg (UK)":
+          volumeUnit = "uk gallon";
+          break;
+      }
+    });
+
+    _vehicleController.text =
+        "${_selectedVehicle?.name} (${_selectedVehicle?.consumption.toStringAsFixed(2)} $consumptionUnit)"; //Have to manually set the text or else it won't show consumptionUnit
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +63,9 @@ class _HomePageState extends State<HomePage> {
         _vehicleController.clear(); // Clear the controller when focused
       }
     });
+
+    _selectedVehicle = _vehicles.first;
+    _getData();
   }
 
   @override
@@ -42,6 +73,7 @@ class _HomePageState extends State<HomePage> {
     // Clean up the controllers when the widget is disposed.
     _dropdownFocusNode.dispose();
     _distanceController.dispose();
+    _vehicleController.dispose();
     super.dispose();
   }
 
@@ -62,7 +94,9 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: Icon(Icons.settings),
               onPressed: () {
-                Navigator.pushNamed(context, '/settings');
+                Navigator.pushNamed(context, '/settings').then((value) {
+                  _getData();
+                });
               },
             ),
           ],
@@ -89,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   return DropdownMenuEntry<Vehicle>(
                     value: v,
                     label:
-                        "${v.name} (${v.consumption.toStringAsFixed(2)} L/10km)",
+                        "${v.name} (${v.consumption.toStringAsFixed(2)} $consumptionUnit)",
                   );
                 }).toList(),
               ),
@@ -102,9 +136,9 @@ class _HomePageState extends State<HomePage> {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
                 ],
                 controller: _distanceController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: UnderlineInputBorder(),
-                  labelText: 'Distance (km)',
+                  labelText: 'Distance ($distanceUnit)',
                 ),
               ),
             ),
@@ -116,9 +150,9 @@ class _HomePageState extends State<HomePage> {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
                 ],
                 controller: _priceController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: UnderlineInputBorder(),
-                  labelText: 'Price (per liter)',
+                  labelText: 'Price (per $volumeUnit)',
                 ),
               ),
             ),

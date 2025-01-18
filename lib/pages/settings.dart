@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_calculator_flutter/components/vehicle_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -18,6 +19,27 @@ class _SettingsPageState extends State<SettingsPage> {
     "mpg (US)",
     "mpg (UK)"
   ];
+
+  _getData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      distanceUnits = prefs.getString('distanceUnit') ?? 'km';
+      consumptionUnits = prefs.getString('consumptionUnit') ?? 'L/100km';
+    });
+  }
+
+  _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('distanceUnit', distanceUnits);
+    await prefs.setString('consumptionUnit', consumptionUnits);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,9 +73,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     borderRadius: BorderRadius.circular(10),
                     value: distanceUnits,
                     onChanged: (String? newValue) {
-                      setState(() {
-                        distanceUnits = newValue!;
-                      });
+                      distanceUnits = newValue!;
+                      _saveData();
+                      setState(() {});
                     },
                     items: const [
                       DropdownMenuItem<String>(
@@ -87,6 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onChanged: (String? newValue) {
                       setState(() {
                         consumptionUnits = newValue!;
+                        _saveData();
                       });
                     },
                     items: consumptionUnitsOptions.map((String value) {
