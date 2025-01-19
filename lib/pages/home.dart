@@ -47,6 +47,12 @@ class _HomePageState extends State<HomePage> {
 
   void _getData() async {
     final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getBool("initialized") == null) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/welcome', (route) => false);
+    }
+
     setState(() {
       _lastPrice = prefs.getDouble('lastPrice') ?? -1;
       _distanceUnit = prefs.getString('distanceUnit') ?? 'km';
@@ -232,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                 controller: _priceController,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(),
-                  labelText: 'Price (per $_volumeUnit)',
+                  labelText: 'Price ($_currency per $_volumeUnit)',
                 ),
               ),
             ),
