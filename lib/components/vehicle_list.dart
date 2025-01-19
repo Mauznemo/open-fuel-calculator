@@ -62,7 +62,7 @@ class _VehicleListState extends State<VehicleList> {
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${vehicleData.name} (${vehicleData.id})",
+                        Text(vehicleData.name,
                             style: const TextStyle(fontSize: 20)),
                         Text(
                             "Consumption: ${vehicleData.consumption.toStringAsFixed(2)} ${widget.consumptionUnit}",
