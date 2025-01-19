@@ -88,7 +88,8 @@ class _HomePageState extends State<HomePage> {
   void _savePriceData() async {
     if (_priceController.text.isEmpty) return;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('lastPrice', double.parse(_priceController.text));
+    await prefs.setDouble(
+        'lastPrice', double.parse(_priceController.text.replaceAll(',', '.')));
   }
 
   @override
