@@ -10,6 +10,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final _currencyController = TextEditingController();
   String distanceUnits = 'km';
   String consumptionUnits = 'L/100km';
 
@@ -25,6 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       distanceUnits = prefs.getString('distanceUnit') ?? 'km';
       consumptionUnits = prefs.getString('consumptionUnit') ?? 'L/100km';
+      _currencyController.text = prefs.getString('currency') ?? '€';
     });
   }
 
@@ -32,12 +34,20 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('distanceUnit', distanceUnits);
     await prefs.setString('consumptionUnit', consumptionUnits);
+    await prefs.setString('currency', _currencyController.text);
   }
 
   @override
   void initState() {
     super.initState();
     _getData();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed.
+    _currencyController.dispose();
+    super.dispose();
   }
 
   @override
@@ -118,6 +128,31 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Text(value),
                       );
                     }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Currency unit:', // Label text
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  TextField(
+                    controller: _currencyController,
+                    onEditingComplete: () {
+                      _saveData();
+                      FocusScope.of(context).unfocus();
+                    },
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      //labelText: 'Vehicle Name',
+                    ),
                   ),
                 ],
               ),

@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   late String _distanceUnit = "";
   late String _consumptionUnit = "";
   late String _volumeUnit = "";
+  late String _currency = "€";
   late double _lastPrice = -1;
 
   void _getVehicles() {
@@ -50,6 +51,8 @@ class _HomePageState extends State<HomePage> {
       _lastPrice = prefs.getDouble('lastPrice') ?? -1;
       _distanceUnit = prefs.getString('distanceUnit') ?? 'km';
       _consumptionUnit = prefs.getString('consumptionUnit') ?? 'L/100km';
+      _currency = prefs.getString('currency') ?? '€';
+
       switch (_consumptionUnit) {
         case "L/100km":
         case "km/L":
@@ -125,7 +128,7 @@ class _HomePageState extends State<HomePage> {
 
     double pricePerL = _getPriceAsPerL(price);
 
-    return "${((distanceInKm * consumptionAsLPer100km / 100) * pricePerL).toStringAsFixed(2)}€";
+    return "${((distanceInKm * consumptionAsLPer100km / 100) * pricePerL).toStringAsFixed(2)}$_currency";
   }
 
   double _getPriceAsPerL(price) {
