@@ -23,9 +23,10 @@ class _HomePageState extends State<HomePage> {
 
   Vehicle? _selectedVehicle;
 
-  late String distanceUnit = "";
-  late String consumptionUnit = "";
-  late String volumeUnit = "";
+  late String _distanceUnit = "";
+  late String _consumptionUnit = "";
+  late String _volumeUnit = "";
+  late double _lastPrice = -1;
 
   void _getVehicles() {
     bool wasEmpty = _vehicles.isEmpty;
@@ -46,28 +47,39 @@ class _HomePageState extends State<HomePage> {
   void _getData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      distanceUnit = prefs.getString('distanceUnit') ?? 'km';
-      consumptionUnit = prefs.getString('consumptionUnit') ?? 'L/100km';
-      switch (consumptionUnit) {
+      _lastPrice = prefs.getDouble('lastPrice') ?? -1;
+      _distanceUnit = prefs.getString('distanceUnit') ?? 'km';
+      _consumptionUnit = prefs.getString('consumptionUnit') ?? 'L/100km';
+      switch (_consumptionUnit) {
         case "L/100km":
         case "km/L":
-          volumeUnit = "liter";
+          _volumeUnit = "liter";
           break;
         case "mpg (US)":
-          volumeUnit = "us gallon";
+          _volumeUnit = "us gallon";
           break;
         case "mpg (UK)":
-          volumeUnit = "uk gallon";
+          _volumeUnit = "uk gallon";
           break;
       }
     });
 
     if (_vehicles.isNotEmpty) {
       _vehicleController.text =
-          "${_selectedVehicle?.name} (${_selectedVehicle?.consumption.toStringAsFixed(2)} $consumptionUnit)"; //Have to manually set the text or else it won't show consumptionUnit
+          "${_selectedVehicle?.name} (${_selectedVehicle?.consumption.toStringAsFixed(2)} $_consumptionUnit)"; //Have to manually set the text or else it won't show consumptionUnit
     } else {
       _vehicleController.text = "No vehicles found";
     }
+
+    if (_lastPrice != -1) {
+      _priceController.text = _lastPrice.toString();
+    }
+  }
+
+  void _savePriceData() async {
+    if (_priceController.text.isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('lastPrice', double.parse(_priceController.text));
   }
 
   @override
@@ -107,7 +119,7 @@ class _HomePageState extends State<HomePage> {
     double price = double.parse(_priceController.text.replaceAll(',', '.'));
 
     double distanceInKm =
-        distanceUnit == "miles" ? distance * 1.60934 : distance;
+        _distanceUnit == "miles" ? distance * 1.60934 : distance;
 
     double consumptionAsLPer100km = _getConsumptionAsLPer100km(consumption);
 
@@ -117,7 +129,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   double _getPriceAsPerL(price) {
-    switch (volumeUnit) {
+    switch (_volumeUnit) {
       case "liter":
         return price;
       case "us gallon":
@@ -130,7 +142,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   double _getConsumptionAsLPer100km(consumption) {
-    switch (consumptionUnit) {
+    switch (_consumptionUnit) {
       case "L/100km":
         return consumption;
       case "km/L":
@@ -184,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                   return DropdownMenuEntry<Vehicle>(
                     value: v,
                     label:
-                        "${v.name} (${v.consumption.toStringAsFixed(2)} $consumptionUnit)",
+                        "${v.name} (${v.consumption.toStringAsFixed(2)} $_consumptionUnit)",
                   );
                 }).toList(),
               ),
@@ -199,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                 controller: _distanceController,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(),
-                  labelText: 'Distance ($distanceUnit)',
+                  labelText: 'Distance ($_distanceUnit)',
                 ),
               ),
             ),
@@ -207,13 +219,17 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(16.0),
               child: TextField(
                 keyboardType: TextInputType.number,
+                onEditingComplete: () {
+                  _savePriceData();
+                  FocusScope.of(context).unfocus();
+                },
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
                 ],
                 controller: _priceController,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(),
-                  labelText: 'Price (per $volumeUnit)',
+                  labelText: 'Price (per $_volumeUnit)',
                 ),
               ),
             ),
@@ -234,7 +250,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Your FAB action
-            AddVehicleBottomSheet.showBottomSheet(context, consumptionUnit)
+            AddVehicleBottomSheet.showBottomSheet(context, _consumptionUnit)
                 .then((value) {
               _getVehicles();
             });
