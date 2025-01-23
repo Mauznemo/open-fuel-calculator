@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_calculator_flutter/pages/home.dart';
+import 'package:fuel_calculator_flutter/pages/range.dart';
 import 'package:fuel_calculator_flutter/pages/settings.dart';
 import 'package:fuel_calculator_flutter/pages/welcome.dart';
 
@@ -31,6 +32,7 @@ void main() async {
             "/": (context) => const HomePage(),
             "/welcome": (context) => const WelcomePage(),
             "/settings": (context) => const SettingsPage(),
+            "/range": (context) => const RangePage(),
           },
         );
       },

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fuel_calculator_flutter/components/drawer.dart';
 import 'package:fuel_calculator_flutter/models/vehicle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/add_vehicle_bottom_sheet.dart';
 import '../helpers/object_box.dart';
+import '../services/calculator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -131,44 +133,18 @@ class _HomePageState extends State<HomePage> {
     double distanceInKm =
         _distanceUnit == "miles" ? distance * 1.60934 : distance;
 
-    double consumptionAsLPer100km = _getConsumptionAsLPer100km(consumption);
+    double consumptionAsLPer100km =
+        Calculator.getConsumptionAsLPer100km(consumption, _consumptionUnit);
 
-    double pricePerL = _getPriceAsPerL(price);
+    double pricePerL = Calculator.getPriceAsPerL(price, _volumeUnit);
 
     return "${((distanceInKm * consumptionAsLPer100km / 100) * pricePerL).toStringAsFixed(2)}$_currency";
-  }
-
-  double _getPriceAsPerL(price) {
-    switch (_volumeUnit) {
-      case "liter":
-        return price;
-      case "us gallon":
-        return price / 3.78541;
-      case "uk gallon":
-        return price / 4.54609;
-      default:
-        return 0;
-    }
-  }
-
-  double _getConsumptionAsLPer100km(consumption) {
-    switch (_consumptionUnit) {
-      case "L/100km":
-        return consumption;
-      case "km/L":
-        return 100 / consumption;
-      case "mpg (US)":
-        return 235.214 / consumption;
-      case "mpg (UK)":
-        return 282.481 / consumption;
-      default:
-        return 0;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: SideDrawer(),
         appBar: AppBar(
           title: const Text('Fuel Calculator'),
           actions: [
@@ -183,6 +159,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ],
+          /*leading: Builder(
+              builder: (context) => IconButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  icon: Icon(Icons.menu))),*/
         ),
         body: Column(
           children: [
@@ -198,7 +178,11 @@ class _HomePageState extends State<HomePage> {
                 enableFilter: true,
                 label: const Text('Select Vehicle'),
                 onSelected: (Vehicle? v) {
+                  if (v == null) {
+                    return;
+                  }
                   _selectedVehicle = v;
+                  _dropdownFocusNode.unfocus();
                   setState(() {});
                 },
                 dropdownMenuEntries:
