@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../helpers/object_box.dart';
 import '../models/vehicle.dart';
+import 'custom_text_input.dart';
 
 class AddVehicleBottomSheet extends StatefulWidget {
   const AddVehicleBottomSheet({super.key, required this.consumptionUnit});
@@ -54,46 +55,50 @@ class _AddVehicleBottomSheetState extends State<AddVehicleBottomSheet> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
+            child: CustomTextInput(
               controller: _vehicleController,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Vehicle Name',
-              ),
+              hintText: 'Vehicle Name',
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
+            child: CustomTextInput(
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
               ],
               controller: _consumptionController,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Consumption (${widget.consumptionUnit})',
-              ),
+              hintText: 'Consumption (${widget.consumptionUnit})',
             ),
           ),
-          FilledButton.icon(
-              onPressed: () {
-                if (_vehicleController.text.isEmpty ||
-                    _consumptionController.text.isEmpty) {
-                  return;
-                }
-                ObjectBox.instance.addVehicle(Vehicle(
-                    name: _vehicleController.text,
-                    consumption: double.parse(
-                        _consumptionController.text.replaceAll(',', '.'))));
-                _vehicleController.clear();
-                _consumptionController.clear();
-                Navigator.pop(context);
-                //_vehicles = ObjectBox.instance.getVehicles();
-                setState(() {});
-              },
-              icon: Icon(Icons.add),
-              label: Text("Add")),
+          const SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              child: FilledButton.icon(
+                  onPressed: () {
+                    if (_vehicleController.text.isEmpty ||
+                        _consumptionController.text.isEmpty) {
+                      return;
+                    }
+                    ObjectBox.instance.addVehicle(Vehicle(
+                        name: _vehicleController.text,
+                        consumption: double.parse(
+                            _consumptionController.text.replaceAll(',', '.'))));
+                    _vehicleController.clear();
+                    _consumptionController.clear();
+                    Navigator.pop(context);
+                    //_vehicles = ObjectBox.instance.getVehicles();
+                    setState(() {});
+                  },
+                  icon: Icon(Icons.add),
+                  style: ButtonStyle(
+                    minimumSize: WidgetStateProperty.all(
+                        Size.fromHeight(56)), // Taller button
+                  ),
+                  label: Text("Add")),
+            ),
+          ),
           const SizedBox(height: 30),
         ],
       ),
