@@ -5,6 +5,8 @@ import 'package:fuel_calculator_flutter/models/vehicle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/add_vehicle_bottom_sheet.dart';
+import '../components/custom_dropdownmenu.dart';
+import '../components/custom_text_input.dart';
 import '../helpers/object_box.dart';
 import '../services/calculator.dart';
 
@@ -168,11 +170,11 @@ class _HomePageState extends State<HomePage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DropdownMenu<Vehicle>(
+              child: CustomDropdownMenu<Vehicle>(
                 initialSelection: _vehicles.isEmpty ? null : _vehicles.first,
-                width: MediaQuery.of(context).size.width,
+                //width: MediaQuery.of(context).size.width,
                 hintText: "Select Vehicle",
-                requestFocusOnTap: true,
+                //requestFocusOnTap: true,
                 controller: _vehicleController,
                 focusNode: _dropdownFocusNode,
                 enableFilter: true,
@@ -197,34 +199,33 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: TextField(
+              child: CustomTextInput(
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
                 ],
+                onEditingComplete: () {
+                  setState(() {});
+                  FocusScope.of(context).unfocus();
+                },
+                hintText: "Distance",
                 controller: _distanceController,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Distance ($_distanceUnit)',
-                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: TextField(
+              child: CustomTextInput(
                 keyboardType: TextInputType.number,
                 onEditingComplete: () {
                   _savePriceData();
+                  setState(() {});
                   FocusScope.of(context).unfocus();
                 },
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
                 ],
                 controller: _priceController,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Price ($_currency per $_volumeUnit)',
-                ),
+                hintText: 'Price ($_currency per $_volumeUnit)',
               ),
             ),
             Expanded(
@@ -232,9 +233,14 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(25.0),
                 child: Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    _getCost(),
-                    style: Theme.of(context).textTheme.displayLarge,
+                  child: GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: _getCost()));
+                    },
+                    child: Text(
+                      _getCost(),
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
                   ),
                 ),
               ),

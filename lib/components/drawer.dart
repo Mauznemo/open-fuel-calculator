@@ -31,7 +31,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 color: ModalRoute.of(context)?.settings.name == '/'
                     ? Theme.of(context).colorScheme.surfaceVariant
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(50),
               ),
               child: ListTile(
                 leading: Icon(
@@ -55,7 +55,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 color: ModalRoute.of(context)?.settings.name == '/range'
                     ? Theme.of(context).colorScheme.surfaceVariant
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(50),
               ),
               child: ListTile(
                 leading: Icon(Icons.speed),
@@ -77,7 +77,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 color: ModalRoute.of(context)?.settings.name == '/settings'
                     ? Theme.of(context).colorScheme.surfaceVariant
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(50),
               ),
               child: ListTile(
                 leading: Icon(Icons.settings),

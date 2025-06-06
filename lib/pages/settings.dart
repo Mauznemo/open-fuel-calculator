@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_calculator_flutter/components/custom_text_input.dart';
 import 'package:fuel_calculator_flutter/components/vehicle_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../components/custom_dropdown_button.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -78,9 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   const SizedBox(
                       height: 8), // Adds spacing between label and dropdown
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    borderRadius: BorderRadius.circular(10),
+                  CustomDropdownButton<String>(
                     value: distanceUnits,
                     onChanged: (String? newValue) {
                       distanceUnits = newValue!;
@@ -112,9 +113,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16,
                     ),
                   ),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    borderRadius: BorderRadius.circular(10),
+                  const SizedBox(height: 8),
+                  CustomDropdownButton<String>(
                     value: consumptionUnits,
                     onChanged: (String? newValue) {
                       setState(() {
@@ -143,16 +143,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16,
                     ),
                   ),
-                  TextField(
+                  const SizedBox(height: 8),
+                  CustomTextInput(
                     controller: _currencyController,
                     onEditingComplete: () {
                       _saveData();
                       FocusScope.of(context).unfocus();
                     },
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      //labelText: 'Vehicle Name',
-                    ),
                   ),
                 ],
               ),
@@ -164,6 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: Theme.of(context).textTheme.titleLarge),
             ),
             Divider(height: 1, color: Colors.grey),
+            SizedBox(height: 20),
             VehicleList(consumptionUnit: consumptionUnits),
           ],
         ));

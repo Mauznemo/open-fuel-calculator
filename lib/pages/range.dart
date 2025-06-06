@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:fuel_calculator_flutter/services/calculator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/custom_dropdownmenu.dart';
+import '../components/custom_text_input.dart';
 import '../components/drawer.dart';
 import '../helpers/object_box.dart';
 import '../models/vehicle.dart';
@@ -130,11 +132,11 @@ class _RangePageState extends State<RangePage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: DropdownMenu<Vehicle>(
+            child: CustomDropdownMenu<Vehicle>(
               initialSelection: _vehicles.isEmpty ? null : _vehicles.first,
-              width: MediaQuery.of(context).size.width,
+              //width: MediaQuery.of(context).size.width,
               hintText: "Select Vehicle",
-              requestFocusOnTap: true,
+              //requestFocusOnTap: true,
               controller: _vehicleController,
               focusNode: _dropdownFocusNode,
               enableFilter: true,
@@ -159,16 +161,17 @@ class _RangePageState extends State<RangePage> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
+            child: CustomTextInput(
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d*')),
               ],
               controller: _volumeController,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: _volumeUnit,
-              ),
+              hintText: _volumeUnit,
+              onEditingComplete: () {
+                setState(() {});
+                FocusScope.of(context).unfocus();
+              },
             ),
           ),
           Expanded(
@@ -176,9 +179,14 @@ class _RangePageState extends State<RangePage> {
               padding: const EdgeInsets.all(25.0),
               child: Align(
                 alignment: Alignment.center,
-                child: Text(
-                  _getRange(),
-                  style: Theme.of(context).textTheme.displayLarge,
+                child: GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: _getRange()));
+                  },
+                  child: Text(
+                    _getRange(),
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
                 ),
               ),
             ),
