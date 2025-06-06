@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fuel_calculator_flutter/components/custom_text_input.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/custom_dropdown_button.dart';
 import '../helpers/object_box.dart';
 import '../models/vehicle.dart';
 
@@ -59,15 +61,18 @@ class _WelcomePageState extends State<WelcomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 25),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text('Set Units:',
-                      style: Theme.of(context).textTheme.titleLarge),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          )),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -79,11 +84,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(
-                        height: 8), // Adds spacing between label and dropdown
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      borderRadius: BorderRadius.circular(10),
+                    CustomDropdownButton<String>(
                       value: distanceUnits,
                       onChanged: (String? newValue) {
                         distanceUnits = newValue!;
@@ -113,9 +114,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         fontSize: 16,
                       ),
                     ),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      borderRadius: BorderRadius.circular(10),
+                    CustomDropdownButton<String>(
                       value: consumptionUnits,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -143,15 +142,11 @@ class _WelcomePageState extends State<WelcomePage> {
                         fontSize: 16,
                       ),
                     ),
-                    TextField(
+                    CustomTextInput(
                       controller: _currencyController,
                       onEditingComplete: () {
                         FocusScope.of(context).unfocus();
                       },
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        //labelText: 'Vehicle Name',
-                      ),
                     ),
                   ],
                 ),
@@ -162,10 +157,12 @@ class _WelcomePageState extends State<WelcomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text('Add first vehicle:',
-                      style: Theme.of(context).textTheme.titleLarge),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          )),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -177,15 +174,11 @@ class _WelcomePageState extends State<WelcomePage> {
                         fontSize: 16,
                       ),
                     ),
-                    TextField(
+                    CustomTextInput(
                       controller: _vehicleController,
                       onEditingComplete: () {
                         FocusScope.of(context).unfocus();
                       },
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        //labelText: 'Vehicle Name',
-                      ),
                     ),
                   ],
                 ),
@@ -201,7 +194,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         fontSize: 16,
                       ),
                     ),
-                    TextField(
+                    CustomTextInput(
                       controller: _consumptionController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -211,10 +204,6 @@ class _WelcomePageState extends State<WelcomePage> {
                       onEditingComplete: () {
                         FocusScope.of(context).unfocus();
                       },
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        //labelText: 'Vehicle Name',
-                      ),
                     ),
                   ],
                 ),
