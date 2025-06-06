@@ -1,2 +1,0 @@
-X:/projects/fuel_calculator_flutter/android/app/.cxx/Debug/6g413b2t/armeabi-v7a/CMakeFiles/edit_cache.dir
-X:/projects/fuel_calculator_flutter/android/app/.cxx/Debug/6g413b2t/armeabi-v7a/CMakeFiles/rebuild_cache.dir
