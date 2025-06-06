@@ -64,8 +64,10 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child:
-                  Text('Units', style: Theme.of(context).textTheme.titleLarge),
+              child: Text('Units',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      )),
             ),
             const Divider(height: 5, color: Colors.grey),
             Padding(
@@ -158,7 +160,9 @@ class _SettingsPageState extends State<SettingsPage> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text('Vehicles',
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      )),
             ),
             Divider(height: 1, color: Colors.grey),
             SizedBox(height: 20),
