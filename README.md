@@ -1,10 +1,10 @@
 # Open Fuel Calculator
 
 <div style="display: flex; gap: 10px;">
-  <img src="docs/img/screenshot_home.png" width="200" height="auto">
-  <img src="docs/img/screenshot_range.png" width="200" height="auto">
-  <img src="docs/img/screenshot_add.png" width="200" height="auto">
-  <img src="docs/img/screenshot_settings.png" width="200" height="auto">
+  <img src="docs/img/screenshot_home_qBEhS.png" width="200" height="auto">
+  <img src="docs/img/screenshot_range_2zsAJ.png" width="200" height="auto">
+  <img src="docs/img/screenshot_add_zfvKm.png" width="200" height="auto">
+  <img src="docs/img/screenshot_settings_f7kAF.png" width="200" height="auto">
 </div>
 
 ## About
