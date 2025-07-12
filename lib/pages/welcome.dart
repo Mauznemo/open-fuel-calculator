@@ -61,7 +61,7 @@ class _WelcomePageState extends State<WelcomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 25),
+              SizedBox(height: 60),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Align(

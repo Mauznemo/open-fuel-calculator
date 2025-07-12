@@ -130,6 +130,7 @@ class _RangePageState extends State<RangePage> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomDropdownMenu<Vehicle>(
