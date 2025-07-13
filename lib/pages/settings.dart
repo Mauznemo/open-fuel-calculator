@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_calculator_flutter/components/custom_text_input.dart';
 import 'package:fuel_calculator_flutter/components/vehicle_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../components/custom_dropdown_button.dart';
 
@@ -56,6 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Settings'),
           scrolledUnderElevation: 0,
@@ -167,6 +170,16 @@ class _SettingsPageState extends State<SettingsPage> {
             Divider(height: 1, color: Colors.grey),
             SizedBox(height: 20),
             VehicleList(consumptionUnit: consumptionUnits),
+            ElevatedButton.icon(
+              // Lifts the button up a bit
+              onPressed: () async {
+                await launchUrl(Uri.parse(
+                    "https://github.com/Mauznemo/open-fuel-calculator"));
+              },
+              icon: const FaIcon(FontAwesomeIcons.github),
+              label: const Text("GitHub"),
+            ),
+            SizedBox(height: 35),
           ],
         ));
   }
