@@ -54,7 +54,12 @@ class _CustomTextInputState extends State<CustomTextInput> {
       obscureText: widget.obscureText,
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
-      onEditingComplete: widget.onEditingComplete,
+      onEditingComplete: () {
+        if (widget.onEditingComplete != null) {
+          widget.onEditingComplete!();
+        }
+        _focusNode.unfocus(); // Unfocus the input field
+      },
       decoration: InputDecoration(
         filled: true,
         fillColor: Theme.of(context).colorScheme.secondaryContainer,
