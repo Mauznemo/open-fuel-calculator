@@ -2,7 +2,7 @@ name: fuel_calculator_flutter
 description: "Open source fuel calculator."
 
 publish_to: "none"
-version: 0.1.2+8
+version: 0.1.4+10
 
 environment:
   sdk: ^3.6.1

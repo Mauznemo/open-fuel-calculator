@@ -35,7 +35,7 @@ class _SideDrawerState extends State<SideDrawer> {
               ),
               child: ListTile(
                 leading: Icon(
-                  Icons.money,
+                  Icons.monetization_on,
                 ),
                 title: const Text("Price"),
                 onTap: () {
@@ -58,7 +58,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 borderRadius: BorderRadius.circular(50),
               ),
               child: ListTile(
-                leading: Icon(Icons.speed),
+                leading: Icon(Icons.route),
                 title: const Text("Range"),
                 onTap: () {
                   Navigator.of(context).pop();
